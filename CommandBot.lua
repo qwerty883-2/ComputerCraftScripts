@@ -23,8 +23,11 @@ if not chat then
     return
 end
 print("Chat Initialized")
- 
- 
+if not detector then 
+    print("environmentDetector error")
+    return
+end
+print("detector Initialized")
 function ParseCommand(args)
     if args[1] == "!weather" or args[1] == "!Weather" then
         if #args == 1 then
@@ -64,13 +67,13 @@ time
             local state
             if args[3] == "weather" then
                 state = weatherkey[weather]
-            elseif args[3] == time then
+            elseif args[3] == "time" then
                 state = time
             else
                 chat.sendMessage(string.format("\"%s\" not valid [target]"), "WeatherBot")
                 return
             end
-            chat.sendMessage(state,"WeatherBot")
+            chat.sendMessage(tostring(state),"WeatherBot")
         else
         chat.sendMessage(string.format("Could not parse argument \"%s\"", args[2]),"WeatherBot")
         end 
@@ -98,7 +101,27 @@ local CommandBot = function()
 
     end
 end
-local WeatherWorker = function() dofile("Weather.lua") end
+local WeatherWorker = function()
+    function getWeather()
+        if detector.isSunny() then return 0 end
+        if detector.isRaining() then return 1 end
+        if detector.isThundering() then return 2 end
+    end
+
+    weather = getWeather()
+
+
+    while sleep(1) do
+        time = detector.getTime()
+        weather = getWeather()
+        if target["time"] ~= -1 and time then
+            
+        end
+        if target["weather"] ~= -1 then
+            
+        end
+    end
+end
 parallel.waitForAny(CommandBot, WeatherWorker)
 chat.sendMessage("A command worker has crashed", "ERROR")
 
