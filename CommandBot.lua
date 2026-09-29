@@ -1,7 +1,16 @@
 local chat = peripheral.find("chat_box")
+if not chat then
+    print("chatbox error")
+    return
+end
+print("Chat Initialized")
 
 --WeatherBot
 local detector = peripheral.find("environmentDetector")
+if not detector then 
+    print("environmentDetector error")
+    return
+end
 local time = detector.getTime()
 local weather
 local target = {
@@ -18,15 +27,7 @@ weatherkey = {
 }
 
 
-if not chat then
-    print("chatbox error")
-    return
-end
-print("Chat Initialized")
-if not detector then 
-    print("environmentDetector error")
-    return
-end
+
 print("detector Initialized")
 function ParseCommand(args)
     if args[1] == "!weather" or args[1] == "!Weather" then
